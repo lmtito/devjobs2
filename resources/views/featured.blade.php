@@ -37,7 +37,7 @@
                                 <br>- Oportunidades de crecimiento dentro de la empresa.
                                 <br>- Trabajo en un entorno que promueve la sostenibilidad y la innovación.</p>
                         </div>
-                        <div class="mbr-section-btn item-footer mt-2"><a href="form.html" class="btn btn-primary item-btn display-7" target="_blank">Postularse</a></div>
+                        <div class="mbr-section-btn item-footer mt-2"><a href="{{ route('home.apply') }}" class="btn btn-primary item-btn display-7" target="_blank">Postularse</a></div>
                     </div>
                 </div>
                 <div class="item features-image сol-12 col-md-6 col-lg-6">
@@ -58,7 +58,7 @@
                                 <br>- Oportunidades de capacitación y desarrollo profesional.
                                 <br>- Un ambiente de trabajo colaborativo y dinámico.<br></p>
                         </div>
-                        <div class="mbr-section-btn item-footer mt-2"><a href="form.html" class="btn btn-primary item-btn display-7" target="_blank">Postularse</a></div>
+                        <div class="mbr-section-btn item-footer mt-2"><a href="{{ route('home.apply') }}" class="btn btn-primary item-btn display-7" target="_blank">Postularse</a></div>
                     </div>
                 </div>
             </div>
