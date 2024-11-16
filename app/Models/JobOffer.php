@@ -23,6 +23,10 @@ class JobOffer extends Model
         'manager_id',
     ];
 
+    protected $appends = [
+        'has_any_relation',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -60,5 +64,10 @@ class JobOffer extends Model
     public function isActive(): bool
     {
         return now()->between($this->start_date, $this->end_date);
+    }
+
+    public function getHasAnyRelationAttribute()
+    {
+        return false; //$this->requirements()->count() > 0 || $this->applications()->count() > 0;
     }
 }

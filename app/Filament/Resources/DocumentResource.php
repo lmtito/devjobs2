@@ -39,6 +39,8 @@ class DocumentResource extends Resource
                         Forms\Components\Select::make('application_id')
                             ->label('Usuario')
                             ->relationship('application.user', 'name')
+                            ->searchable()
+                            ->preload()
                             ->required(),
                         Forms\Components\SpatieMediaLibraryFileUpload::make('file')
                             ->label('Documento')
@@ -63,36 +65,49 @@ class DocumentResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Nombre')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('file_path')
                     ->label('Ruta')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('document_type')
                     ->label('Tipo de Documento')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('application.user')
+                    ->searchable()
+                    ->sortable()
+                    ->alignCenter(),
+                Tables\Columns\TextColumn::make('application.user.name')
                     ->label('Usuario')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
+                    ->label('Eliminado')
+                    ->dateTime('d/m/Y H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Creado')
+                    ->dateTime('d/m/Y H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Actualizado')
+                    ->dateTime('d/m/Y H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('application')
+                    ->label('Usuario')
+                    ->relationship('application.user', 'name')
+                    ->searchable()
+                    ->preload(),
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

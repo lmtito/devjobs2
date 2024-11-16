@@ -25,7 +25,7 @@ class JobOfferFactory extends Factory
             'description' => fake()->paragraphs(3, true),
             'start_date' => $startDate,
             'end_date' => fake()->dateTimeBetween($startDate, '+6 months'),
-            'sector_id' => Sector::factory(),
+            'sector_id' => Sector::all()->random()->id,
             'manager_id' => User::factory()->manager(),
         ];
     }

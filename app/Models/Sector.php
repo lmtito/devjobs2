@@ -17,8 +17,17 @@ class Sector extends Model
         'description',
     ];
 
+    protected $appends = [
+        'has_any_relation',
+    ];
+
     public function jobOffers(): HasMany
     {
         return $this->hasMany(JobOffer::class);
+    }
+
+    public function getHasAnyRelationAttribute()
+    {
+        return $this->jobOffers()->count() > 0;
     }
 }

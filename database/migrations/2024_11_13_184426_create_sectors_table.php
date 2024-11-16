@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Models\Sector;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -18,6 +19,25 @@ return new class extends Migration
             $table->softDeletes();
             $table->timestamps();
         });
+
+        Sector::insert([
+            [
+                'name' => 'Electricidad',
+                'description' => 'Sector de Electricidad',
+            ],
+            [
+                'name' => 'Mantenimiento',
+                'description' => 'Sector de Mantenimiento',
+            ],
+            [
+                'name' => 'Instalación Sanitaria',
+                'description' => 'Sector de Instalación Sanitaria',
+            ],
+            [
+                'name' => 'Sistemas',
+                'description' => 'Sector de Sistemas',
+            ],
+        ]);
     }
 
     /**

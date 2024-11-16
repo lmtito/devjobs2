@@ -26,22 +26,28 @@ class UserResource extends Resource
                 Forms\Components\Section::make()
                     ->schema([
                         Forms\Components\TextInput::make('name')
+                            ->label('Nombre')
                             ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('email')
                             ->email()
                             ->required()
                             ->maxLength(255),
-                        Forms\Components\DateTimePicker::make('email_verified_at'),
+                        Forms\Components\DateTimePicker::make('email_verified_at')
+                            ->label('Fecha de Verificación')
+                            ->displayFormat('d/m/Y H:i'),
                         Forms\Components\TextInput::make('password')
+                            ->label('Contraseña')
                             ->password()
                             ->required()
                             ->maxLength(255),
                         Forms\Components\TextInput::make('role')
+                            ->label('Rol')
                             ->required()
                             ->maxLength(255)
                             ->default('applicant'),
                         Forms\Components\DateTimePicker::make('registration_date')
+                            ->label('Fecha de Registro')
                             ->required(),
                     ]),
             ]);
@@ -52,27 +58,36 @@ class UserResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
+                    ->label('Nombre')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
+                    ->label('Fecha de Verificación')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('role')
-                    ->searchable(),
+                    ->label('Rol')
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('registration_date')
-                    ->dateTime()
+                    ->label('Fecha de Registro')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
+                    ->label('Eliminado')
+                    ->dateTime('d/m/Y H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Creado')
+                    ->dateTime('d/m/Y H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Actualizado')
+                    ->dateTime('d/m/Y H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -115,5 +130,10 @@ class UserResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
     }
 }

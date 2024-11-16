@@ -42,6 +42,7 @@ class ApplicationResource extends Resource
                             ->required(),
                         Forms\Components\DateTimePicker::make('application_date')
                             ->label('Fecha de Postulación')
+                            ->displayFormat('d/m/Y')
                             ->required()
                             ->default(now()),
                         Forms\Components\Select::make('status')
@@ -60,11 +61,9 @@ class ApplicationResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Usuario')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('jobOffer.title')
                     ->label('Oferta Laboral')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('application_date')
                     ->label('Fecha de Postulación')
@@ -74,6 +73,7 @@ class ApplicationResource extends Resource
                 Tables\Columns\TextColumn::make('status')
                     ->label('Estado')
                     ->searchable()
+                    ->sortable()
                     ->alignCenter(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->label('Eliminado')

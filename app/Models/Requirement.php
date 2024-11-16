@@ -17,6 +17,10 @@ class Requirement extends Model
         'requires_document',
     ];
 
+    protected $appends = [
+        'has_any_relation',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -33,5 +37,10 @@ class Requirement extends Model
     {
         return $this->belongsToMany(JobOffer::class, 'job_offer_requirements')
             ->withTimestamps();
+    }
+
+    public function getHasAnyRelationAttribute()
+    {
+        return false; //$this->jobOffers()->count() > 0;
     }
 }

@@ -30,22 +30,33 @@ class JobOfferResource extends Resource
                         Forms\Components\TextInput::make('title')
                             ->label('Título')
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->columnSpanFull(),
                         Forms\Components\Textarea::make('description')
                             ->label('Descripción')
                             ->columnSpanFull(),
                         Forms\Components\DatePicker::make('start_date')
+                            ->label('Fecha de Inicio')
+                            ->displayFormat('d/m/Y')
                             ->required(),
                         Forms\Components\DatePicker::make('end_date')
+                            ->label('Fecha de Fin')
+                            ->displayFormat('d/m/Y')
                             ->required(),
                         Forms\Components\Select::make('sector_id')
+                            ->label('Sector')
                             ->relationship('sector', 'name')
+                            ->searchable()
+                            ->preload()
                             ->required(),
                         Forms\Components\Select::make('manager_id')
                             ->label('Encargado')
                             ->relationship('manager', 'name')
+                            ->searchable()
+                            ->preload()
                             ->required(),
-                    ]),
+                    ])
+                    ->columns(2),
             ]);
     }
 
@@ -55,44 +66,63 @@ class JobOfferResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->label('Título')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('title')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('description')
                     ->label('Descripción')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('start_date')
                     ->label('Fecha de Inicio')
-                    ->date()
+                    ->date('d/m/Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('end_date')
                     ->label('Fecha de Fin')
-                    ->date()
+                    ->date('d/m/Y')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('sector.name')
                     ->label('Sector')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('manager.name')
                     ->label('Encargado')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
+                    ->label('Eliminado')
+                    ->dateTime('d/m/Y H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->label('Creado')
+                    ->dateTime('d/m/Y H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
+                    ->label('Actualizado')
+                    ->dateTime('d/m/Y H:i:s')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('sector')
+                    ->label('Sector')
+                    ->relationship('sector', 'name')
+                    ->searchable()
+                    ->preload(),
+                Tables\Filters\SelectFilter::make('manager')
+                    ->label('Encargado')
+                    ->relationship('manager', 'name')
+                    ->searchable()
+                    ->preload(),
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->hidden(fn ($record) => $record->has_any_relation),
+                Tables\Actions\ForceDeleteAction::make()
+                    ->hidden(fn ($record) => $record->has_any_relation),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
