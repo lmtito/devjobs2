@@ -2,16 +2,20 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\JobOfferResource\Pages;
-use App\Filament\Resources\JobOfferResource\RelationManagers;
-use App\Models\JobOffer;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
 use Filament\Tables;
+use App\Models\JobOffer;
+use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Filament\Resources\Resource;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Tables\Actions\ExportBulkAction;
+use App\Filament\Resources\JobOfferResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\JobOfferResource\RelationManagers;
 
 class JobOfferResource extends Resource
 {
@@ -25,38 +29,76 @@ class JobOfferResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Section::make()
-                    ->schema([
-                        Forms\Components\TextInput::make('title')
-                            ->label('Título')
-                            ->required()
-                            ->maxLength(255)
-                            ->columnSpanFull(),
-                        Forms\Components\Textarea::make('description')
-                            ->label('Descripción')
-                            ->columnSpanFull(),
-                        Forms\Components\DatePicker::make('start_date')
-                            ->label('Fecha de Inicio')
-                            ->displayFormat('d/m/Y')
-                            ->required(),
-                        Forms\Components\DatePicker::make('end_date')
-                            ->label('Fecha de Fin')
-                            ->displayFormat('d/m/Y')
-                            ->required(),
-                        Forms\Components\Select::make('sector_id')
-                            ->label('Sector')
-                            ->relationship('sector', 'name')
-                            ->searchable()
-                            ->preload()
-                            ->required(),
-                        Forms\Components\Select::make('manager_id')
-                            ->label('Encargado')
-                            ->relationship('manager', 'name')
-                            ->searchable()
-                            ->preload()
-                            ->required(),
+                Forms\Components\Tabs::make('Label')
+                    ->tabs([
+                        Forms\Components\Tabs\Tab::make('Vacante')
+                            ->schema([
+                                Forms\Components\SpatieMediaLibraryFileUpload::make('image')
+                                    ->label('Imagen')
+                                    ->columnSpanFull()
+                                    ->collection('job_offers'),
+                                Forms\Components\TextInput::make('title')
+                                    ->label('Título')
+                                    ->required()
+                                    ->maxLength(255),
+                                    //->columnSpanFull(),
+                                Forms\Components\Select::make('sector_id')
+                                    ->label('Sector')
+                                    ->relationship('sector', 'name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->required(),
+                                Forms\Components\Textarea::make('short_description')
+                                    ->label('Descripción Corta')
+                                    ->columnSpanFull(),
+                                Forms\Components\Textarea::make('description')
+                                    ->label('Descripción Completa')
+                                    ->columnSpanFull(),
+                                Forms\Components\Textarea::make('benefits')
+                                    ->label('Ofrecimientos')
+                                    ->columnSpanFull(),
+                                Forms\Components\DatePicker::make('start_date')
+                                    ->label('Fecha de Inicio')
+                                    ->displayFormat('d/m/Y')
+                                    ->required(),
+                                Forms\Components\DatePicker::make('end_date')
+                                    ->label('Fecha de Fin')
+                                    ->displayFormat('d/m/Y')
+                                    ->required(),
+                            ])
+                            ->columns(2),
+
+                        Forms\Components\Tabs\Tab::make('Requisitos')
+                            ->schema([
+                                Forms\Components\Select::make('requirements')
+                                    ->label('Requisitos')
+                                    ->relationship('requirements', 'description')
+                                    ->multiple()
+                                    ->searchable()
+                                    ->preload()
+                                    ->required()
+                                    ->manageOptionForm([
+                                        Forms\Components\Section::make()
+                                            //->schema(Requirement::getDetailsFormSchema())
+                                            ->schema([
+                                                Forms\Components\Textarea::make('description')
+                                                ->label('Descripción')
+                                                ->required()
+                                                ->columnSpanFull(),
+                                                Forms\Components\Toggle::make('requires_document')
+                                                ->label('Requiere Documento')
+                                                ->required(),
+                                            ]),
+                                    ])
+                                    ->createOptionAction(function (Action $action) {
+                                        return $action
+                                            ->modalHeading('Crear Requisito')
+                                            ->modalSubmitActionLabel('Crear Requisito');
+                                            //->modalWidth('7xl');
+                                    }),
+                            ]),
                     ])
-                    ->columns(2),
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -64,14 +106,34 @@ class JobOfferResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
+                    ->label('Imagen')
+                    ->square()
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->collection('job_offers'),
                 Tables\Columns\TextColumn::make('title')
                     ->label('Título')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('description')
-                    ->label('Descripción')
+                Tables\Columns\TextColumn::make('sector.name')
+                    ->label('Sector')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('sector.manager.name')
+                    ->label('Encargado')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('short_description')
+                    ->label('Descripción Corta')
+                    ->html()
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('requirements.description')
+                    ->label('Requisitos')
+                    ->listWithLineBreaks()
+                    ->bulleted()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('benefits')
+                    ->label('Ofrecimientos')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('start_date')
                     ->label('Fecha de Inicio')
                     ->date('d/m/Y')
@@ -79,12 +141,6 @@ class JobOfferResource extends Resource
                 Tables\Columns\TextColumn::make('end_date')
                     ->label('Fecha de Fin')
                     ->date('d/m/Y')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('sector.name')
-                    ->label('Sector')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('manager.name')
-                    ->label('Encargado')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->label('Eliminado')
@@ -108,11 +164,6 @@ class JobOfferResource extends Resource
                     ->relationship('sector', 'name')
                     ->searchable()
                     ->preload(),
-                Tables\Filters\SelectFilter::make('manager')
-                    ->label('Encargado')
-                    ->relationship('manager', 'name')
-                    ->searchable()
-                    ->preload(),
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
@@ -130,6 +181,20 @@ class JobOfferResource extends Resource
                     Tables\Actions\ForceDeleteBulkAction::make(),
                     Tables\Actions\RestoreBulkAction::make(),
                 ]),
+                Tables\Actions\BulkAction::make('downloadPdf')
+                    ->label('Descargar PDF')
+                    ->color('warning')
+                    ->icon('heroicon-o-arrow-down-on-square')
+                    ->action(function (Collection $records) {
+                        $pdf = Pdf::loadView('pdfs.job_offers', ['job_offers' => $records]);
+                        return response()
+                            ->streamDownload(function () use ($pdf) {
+                                echo $pdf->download('job_offers.pdf');
+                            }, 'job_offers.pdf', ['Content-Type' => 'application/pdf']);
+                    }),
+                ExportBulkAction::make()
+                    ->label('Exportar a Excel')
+                    ->color('success'),
             ]);
     }
 

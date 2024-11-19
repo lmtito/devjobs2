@@ -22,11 +22,14 @@ class JobOfferFactory extends Factory
 
         return [
             'title' => fake()->jobTitle(),
+            'short_description' => fake()->paragraphs(1, true),
             'description' => fake()->paragraphs(3, true),
+            'image' => fake()->imageUrl,
+            'benefits' => fake()->paragraphs(3, true),
             'start_date' => $startDate,
             'end_date' => fake()->dateTimeBetween($startDate, '+6 months'),
             'sector_id' => Sector::all()->random()->id,
-            'manager_id' => User::factory()->manager(),
+            'active' => false,
         ];
     }
 }

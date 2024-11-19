@@ -10,7 +10,6 @@ use App\Models\Application;
 use App\Enums\ApplicantStatus;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Resources\Resource;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Filament\Tables\Actions\ExportBulkAction;
@@ -155,9 +154,10 @@ class ApplicationResource extends Resource
                 SoftDeletingScope::class,
             ]);
     }
-
+/*
     public static function canCreate(): bool
     {
         return false;
     }
+*/
 }

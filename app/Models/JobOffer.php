@@ -16,11 +16,14 @@ class JobOffer extends Model
 
     protected $fillable = [
         'title',
+        'short_description',
         'description',
+        'image',
+        'benefits',
         'start_date',
         'end_date',
         'sector_id',
-        'manager_id',
+        'active',
     ];
 
     protected $appends = [
@@ -37,6 +40,7 @@ class JobOffer extends Model
         return [
             'start_date' => 'date',
             'end_date' => 'date',
+            'active' => 'boolean',
         ];
     }
 
@@ -45,14 +49,9 @@ class JobOffer extends Model
         return $this->belongsTo(Sector::class);
     }
 
-    public function manager(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'manager_id');
-    }
-
     public function requirements(): BelongsToMany
     {
-        return $this->belongsToMany(Requirement::class, 'job_offer_requirements')
+        return $this->belongsToMany(Requirement::class, 'job_offer_requirement')
             ->withTimestamps();
     }
 
@@ -68,6 +67,6 @@ class JobOffer extends Model
 
     public function getHasAnyRelationAttribute()
     {
-        return false; //$this->requirements()->count() > 0 || $this->applications()->count() > 0;
+        return $this->requirements()->count() > 0 || $this->applications()->count() > 0;
     }
 }

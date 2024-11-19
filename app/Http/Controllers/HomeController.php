@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JobOffer;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -33,7 +34,9 @@ class HomeController extends Controller
 
     public function offers()
     {
-        return view('offers');
+        $jobOffers = JobOffer::latest()->where('active', true)->take(5)->get();
+
+        return view('offers', compact('jobOffers'));
     }
 
     public function apply()

@@ -35,12 +35,12 @@ class Requirement extends Model
 
     public function jobOffers(): BelongsToMany
     {
-        return $this->belongsToMany(JobOffer::class, 'job_offer_requirements')
+        return $this->belongsToMany(JobOffer::class, 'job_offer_requirement')
             ->withTimestamps();
     }
 
     public function getHasAnyRelationAttribute()
     {
-        return false; //$this->jobOffers()->count() > 0;
+        return $this->jobOffers()->count() > 0;
     }
 }

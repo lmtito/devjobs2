@@ -33,6 +33,12 @@ class SectorResource extends Resource
                         Forms\Components\Textarea::make('description')
                             ->label('Descripción')
                             ->columnSpanFull(),
+                        Forms\Components\Select::make('manager_id')
+                            ->label('Encargado')
+                            ->relationship('manager', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->required(),
                     ]),
             ]);
     }
@@ -48,6 +54,9 @@ class SectorResource extends Resource
                 Tables\Columns\TextColumn::make('description')
                     ->label('Descripción')
                     ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('manager.name')
+                    ->label('Encargado')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->label('Eliminado')
@@ -66,6 +75,11 @@ class SectorResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('manager')
+                    ->label('Encargado')
+                    ->relationship('manager', 'name')
+                    ->searchable()
+                    ->preload(),
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([

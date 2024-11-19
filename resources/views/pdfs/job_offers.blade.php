@@ -1,13 +1,14 @@
+<!-- resources/views/pdfs/job_offers.blade.php -->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Postulaciones</title>
+    <title>Ofertas Laborales</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
         }
         h3 {
             text-align: center;
@@ -15,39 +16,38 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
         }
         th, td {
-            border: 1px solid #000;
+            border: 1px solid #dddddd;
+            text-align: left;
             padding: 8px;
-            text-align: center;
         }
         th {
             background-color: #f2f2f2;
         }
-
     </style>
 </head>
 <body>
     <h4>EcoTech Solutions</h4>
-    <h3>Listado de Postulaciones</h3>
+    <h3>Ofertas Laborales</h3>
     <table>
         <thead>
             <tr>
-                <th>Usuario</th>
-                <th>Oferta Laboral</th>
-                <th>Fecha de Postulación</th>
-                <th>Estado</th>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Fecha de Inicio</th>
+                <th>Fecha de Fin</th>
+                <th>Sector</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($applicants as $applicant)
+            @foreach($job_offers as $job_offer)
             <tr>
-                <td>{{ $applicant->user->name }}</td>
-                <td>{{ $applicant->jobOffer->title }}</td>
-                <td>{{ $applicant->application_date->format('d/m/Y H:i') }}</td>
-
-                <td>{{ $applicant->status }}</td>
+                <td>{{ $job_offer->title }}</td>
+                <td>{{ $job_offer->description }}</td>
+                <td>{{ $job_offer->start_date->format('d/m/Y') }}</td>
+                <td>{{ $job_offer->end_date->format('d/m/Y') }}</td>
+                <td>{{ $job_offer->sector->name }}</td>
             </tr>
             @endforeach
         </tbody>
