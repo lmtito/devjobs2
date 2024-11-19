@@ -33,10 +33,9 @@ class JobOfferResource extends Resource
                     ->tabs([
                         Forms\Components\Tabs\Tab::make('Vacante')
                             ->schema([
-                                Forms\Components\SpatieMediaLibraryFileUpload::make('image')
+                                Forms\Components\FileUpload::make('image')
                                     ->label('Imagen')
-                                    ->columnSpanFull()
-                                    ->collection('job_offers'),
+                                    ->columnSpanFull(),
                                 Forms\Components\TextInput::make('title')
                                     ->label('Título')
                                     ->required()
@@ -106,11 +105,10 @@ class JobOfferResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
+                Tables\Columns\ImageColumn::make('image')
                     ->label('Imagen')
                     ->square()
-                    ->toggleable(isToggledHiddenByDefault: true)
-                    ->collection('job_offers'),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('title')
                     ->label('Título')
                     ->searchable()
