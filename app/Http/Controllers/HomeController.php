@@ -29,12 +29,14 @@ class HomeController extends Controller
 
     public function featured()
     {
-        return view('featured');
+        $jobOffers = JobOffer::latest()->where('is_featured', true)->take(2)->get();
+
+        return view('featured', compact('jobOffers'));
     }
 
     public function offers()
     {
-        $jobOffers = JobOffer::latest()->where('active', true)->take(5)->get();
+        $jobOffers = JobOffer::latest()->where('is_active', true)->take(5)->get();
 
         return view('offers', compact('jobOffers'));
     }

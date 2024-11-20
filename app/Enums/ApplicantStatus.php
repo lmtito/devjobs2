@@ -20,7 +20,7 @@ enum ApplicantStatus: string implements HasColor, HasIcon, HasLabel
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::PENDING => 'info',
+            self::PENDING => 'warning',
             self::ACCEPTED => 'success',
             self::REJECTED => 'danger',
         };

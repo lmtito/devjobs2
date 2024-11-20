@@ -2,17 +2,19 @@
 
 namespace App\Models;
 
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class JobOffer extends Model
+class JobOffer extends Model implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\JobOfferFactory> */
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, InteractsWithMedia;
 
     protected $fillable = [
         'title',
@@ -23,7 +25,8 @@ class JobOffer extends Model
         'start_date',
         'end_date',
         'sector_id',
-        'active',
+        'is_active',
+        'is_featured',
     ];
 
     protected $appends = [
@@ -40,7 +43,8 @@ class JobOffer extends Model
         return [
             'start_date' => 'date',
             'end_date' => 'date',
-            'active' => 'boolean',
+            'is_active' => 'boolean',
+            'is_featured' => 'boolean',
         ];
     }
 

@@ -30,13 +30,25 @@
     <link rel="preload" as="style" href="assets/mobirise/css/mbr-additional.css?v=q5yKkb">
     <link rel="stylesheet" href="assets/mobirise/css/mbr-additional.css?v=q5yKkb" type="text/css">
 </head>
-<body>
+<body class="bg-gray">
     <div id="app">
-        @include('layouts.navigation')
-        <main class="py-4">
+        <header>
+            @include('layouts.navigation')
+        </header>
+        <main class="py-2 shadow-sm">
             @yield('content')
         </main>
-        @include('layouts.footer')
+        <footer class="footer container-fluid bg-black py-4">
+            @include('layouts.footer')
+        </footer>
     </div>
 </body>
 </html>
+
+<style type="text/css">
+    #app {
+        min-height: 100dvh;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+    }
+</style>

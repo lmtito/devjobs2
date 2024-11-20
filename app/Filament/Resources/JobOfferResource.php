@@ -33,8 +33,9 @@ class JobOfferResource extends Resource
                     ->tabs([
                         Forms\Components\Tabs\Tab::make('Vacante')
                             ->schema([
-                                Forms\Components\FileUpload::make('image')
-                                    ->label('Imagen')
+                                Forms\Components\SpatieMediaLibraryFileUpload::make('image')
+                                    ->image()
+                                    ->imageEditor()
                                     ->columnSpanFull(),
                                 Forms\Components\TextInput::make('title')
                                     ->label('Título')
@@ -63,6 +64,10 @@ class JobOfferResource extends Resource
                                 Forms\Components\DatePicker::make('end_date')
                                     ->label('Fecha de Fin')
                                     ->displayFormat('d/m/Y')
+                                    ->required(),
+                                Forms\Components\Checkbox::make('is_active')
+                                    ->required(),
+                                Forms\Components\Checkbox::make('is_featured')
                                     ->required(),
                             ])
                             ->columns(2),
@@ -105,7 +110,7 @@ class JobOfferResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image')
+                Tables\Columns\SpatieMediaLibraryImageColumn::make('image')
                     ->label('Imagen')
                     ->square()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -140,6 +145,8 @@ class JobOfferResource extends Resource
                     ->label('Fecha de Fin')
                     ->date('d/m/Y')
                     ->sortable(),
+                Tables\Columns\CheckboxColumn::make('is_active'),
+                Tables\Columns\CheckboxColumn::make('is_featured'),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->label('Eliminado')
                     ->dateTime('d/m/Y H:i:s')
@@ -157,6 +164,12 @@ class JobOfferResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                Tables\Filters\Filter::make('is_active')
+                    ->label('Activas')
+                    ->query(fn (Builder $query): Builder => $query->where('is_active', true)),
+                Tables\Filters\Filter::make('is_featured')
+                    ->label('Destacadas')
+                    ->query(fn (Builder $query): Builder => $query->where('is_featured', true)),
                 Tables\Filters\SelectFilter::make('sector')
                     ->label('Sector')
                     ->relationship('sector', 'name')

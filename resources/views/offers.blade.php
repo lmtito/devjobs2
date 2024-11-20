@@ -18,7 +18,9 @@
                                 <p class="mbr-text mbr-fonts-style mb-3 display-4">
                                     {{ $jobOffer->short_description }}
                                 </p>
-                                <div class="mbr-section-btn"><a href="#" class="btn btn-primary display-4" onclick="toggleDetails('details{{ $index }}')">Más Información</a></div>
+                                <div class="mbr-section-btn">
+                                    <a href="#" class="btn btn-primary display-4" onclick="toggleDetails('details{{ $index }}')">Más Información</a>
+                                </div>
                                 <div id="details{{ $index }}" class="details" style="display: none;">
                                     <p></p>
                                     <h6><b>Descripción del Puesto:</b></h6>
@@ -35,7 +37,9 @@
                                             <li>{{ $benefit }}</li>
                                         @endforeach
                                     </ul>
-                                    <div class="mbr-section-btn item-footer mt-2"><a href="{{ route('home.apply') }}" class="btn btn-primary item-btn display-4" target="_blank">Postularse</a></div>
+                                    <div class="mbr-section-btn item-footer mt-2">
+                                        <a href="{{ route('home.apply') }}" class="btn btn-primary item-btn display-4" target="_blank">Postularse</a>
+                                    </div>
                                 </div>
                             </div>
 
@@ -58,6 +62,5 @@
             details.style.display = "none";
         }
     }
-
 </script>
 @endsection

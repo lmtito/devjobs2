@@ -29,7 +29,8 @@ class JobOfferFactory extends Factory
             'start_date' => $startDate,
             'end_date' => fake()->dateTimeBetween($startDate, '+6 months'),
             'sector_id' => Sector::all()->random()->id,
-            'active' => false,
+            'is_active' => false,
+            'is_featured' => false,
         ];
     }
 }

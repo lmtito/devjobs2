@@ -23,7 +23,8 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->foreignId('sector_id')->constrained()->onDelete('cascade');
-            $table->boolean('active')->default(true);
+            $table->boolean('is_active')->default(true);
+            $table->boolean('is_featured')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -38,7 +39,8 @@ return new class extends Migration
                 'start_date' => now()->addDay(2),
                 'end_date' => now()->addDay(15),
                 'sector_id' => 1, //Sector::where('name', 'Electricidad')->first()->id,
-                'active' => true,
+                'is_active' => true,
+                'is_featured' => true,
             ],
             [
                 'title' => 'Técnico de Mantenimiento',
@@ -49,7 +51,8 @@ return new class extends Migration
                 'start_date' => now()->addWeek(),
                 'end_date' => now()->addMonth(),
                 'sector_id' => 2,
-                'active' => true,
+                'is_active' => true,
+                'is_featured' => true,
             ],
             [
                 'title' => 'Desarrollador de Software',
@@ -60,7 +63,8 @@ return new class extends Migration
                 'start_date' => now()->addDay(4),
                 'end_date' => now()->addWeek(2),
                 'sector_id' => 4,
-                'active' => true,
+                'is_active' => true,
+                'is_featured' => false,
             ],
             [
                 'title' => 'Especialista en Selección de Personal',
@@ -71,7 +75,8 @@ return new class extends Migration
                 'start_date' => now()->addDay(5),
                 'end_date' => now()->addDay(20),
                 'sector_id' => 5,
-                'active' => true,
+                'is_active' => true,
+                'is_featured' => false,
             ],
             [
                 'title' => 'Ejecutivo de Marketing Digital',
@@ -82,7 +87,8 @@ return new class extends Migration
                 'start_date' => now()->addDay(10),
                 'end_date' => now()->addWeek(3),
                 'sector_id' => 6,
-                'active' => true,
+                'is_active' => true,
+                'is_featured' => false,
             ],
         ]);
     }
